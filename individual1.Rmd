@@ -9,22 +9,29 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Import and Setup
 
+## Setup
 ```{r}
+# dplyr
 library(dplyr)
-dat <- readxl::read_xls('GSS.xls')
-dat
+# ggplot2
+library(ggplot2)
+
+
+
+dat <- readxl::read_xls('GSS(2).xls')
+
+dat <- rename(dat, marriage = Marital_status, happiness = General_happiness, polParty = Political_party_affiliation, avgWorkWeek = Number_of_hours_usually_work_a_week, highEd = Highest_year_of_school_completed, gender = Respondents_sex)
 ```
 
 ## 1
 ```{r}
-dat$educ <- as.numeric(as.character(dat$educ))
+dat$highEd <- as.numeric(as.character(dat$highEd))
 dat %>%
-  group_by(pol) %>%
-  summarise_at(vars(educ), funs(mean(., na.rm=TRUE))) -> grouped
+  group_by(polParty) %>%
+  summarise_at(vars(highEd), funs(mean(., na.rm=TRUE))) -> grouped
 
-ndx = order(grouped$educ, decreasing = TRUE)
+ndx = order(grouped$highEd, decreasing = TRUE)
 
 grouped[ndx,]
 
@@ -33,33 +40,20 @@ Generally republicans have the higher average years of education than democrats,
 
 ## 2
 ```{r}
-dat %>%
-  group_by(pol) %>%
-  summarise_at(vars(educ), funs(median(., na.rm=TRUE))) -> grouped2
-grouped2
-one <- filter(dat, pol == 'Don\'t know' & educ >= 11)
-two <- filter(dat, pol == 'Ind,near dem' & educ >= 13)
-three <- filter(dat, pol == 'Ind,near rep' & educ >= 13)
-four <- filter(dat, pol == 'Independent' & educ >= 12)
-five <- filter(dat, pol == 'No answer' & educ >= 12)
-six <- filter(dat, pol == 'Not str democrat' & educ >= 12)
-seven <- filter(dat, pol == 'Not str republican' & educ >= 13)
-eight <- filter(dat, pol == 'Other party' & educ >= 13)
-nine <- filter(dat, pol == 'Strong democrat' & educ >= 12)
-ten <- filter(dat, pol == 'Strong republican' & educ>= 12)
-
-t <- rbind(one, two)
-t <- rbind(t, three)
-t <- rbind(t, four)
-t <- rbind(t, five)
-t <- rbind(t, six)
-t <- rbind(t, seven)
-t <- rbind(t, eight)
-t <- rbind(t, nine)
-t <- rbind(t, ten)
-
-summary(t)
-str(t)
-
+filtered <- filter(dat, (polParty == 'Don\'t know' & highEd >= 11) | (polParty == 'Ind,near dem' & highEd >= 13) | ( polParty == 'Ind,near rep' & highEd >= 13) | (polParty == 'Independent' & highEd >= 12) | (polParty == 'No answer' & highEd >= 12) | (polParty == 'Not str democrat' & highEd >= 12) | ( polParty == 'Not str republican' & highEd >= 13) | (polParty == 'Other party' & highEd >= 13) |  (polParty == 'Strong democrat' & highEd >= 12) | (polParty == 'Strong republican' & highEd>= 12))
+filtered
+summary(filtered)
+str(filtered)
 ```
+
+## 6 Part 1
+```{r}
+dat %>%
+  group_by(gender) %>%
+  summarise_at(vars(highEd), funs(mean(., na.rm=TRUE))) -> groupedGender
+groupedGender
+
+ggplot(dat, aes(x=gender, y=highEd)) + geom_boxplot()
+```
+Here we can see the relationship between the respondents sex and the level of education they achieved. Numerically we can see that there is some difference, that men average 13 years and females average 12.8 years. The boxplot shows a similar story that they are very similar. They both hold the same median and Q1 boundary at 12. We do see a difference in the Q3 boundary where extends to 16 and women stop at 15. This boxplot may not be the perfect representation as the scale isn't completely continuous. 
 

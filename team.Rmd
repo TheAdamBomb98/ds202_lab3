@@ -41,34 +41,10 @@ grouped[ndx,]
 
 ## 2
 ```{r}
-dat %>%
-  group_by(polParty) %>%
-  summarise_at(vars(highEd), funs(median(., na.rm=TRUE))) -> grouped2
-grouped2
-one <- filter(dat, polParty == 'Don\'t know' & highEd >= 11)
-two <- filter(dat, polParty == 'Ind,near dem' & highEd >= 13)
-three <- filter(dat, polParty == 'Ind,near rep' & highEd >= 13)
-four <- filter(dat, polParty == 'Independent' & highEd >= 12)
-five <- filter(dat, polParty == 'No answer' & highEd >= 12)
-six <- filter(dat, polParty == 'Not str democrat' & highEd >= 12)
-seven <- filter(dat, polParty == 'Not str republican' & highEd >= 13)
-eight <- filter(dat, polParty == 'Other party' & highEd >= 13)
-nine <- filter(dat, polParty == 'Strong democrat' & highEd >= 12)
-ten <- filter(dat, polParty == 'Strong republican' & highEd>= 12)
-
-t <- rbind(one, two)
-t <- rbind(t, three)
-t <- rbind(t, four)
-t <- rbind(t, five)
-t <- rbind(t, six)
-t <- rbind(t, seven)
-t <- rbind(t, eight)
-t <- rbind(t, nine)
-t <- rbind(t, ten)
-
-summary(t)
-str(t)
-
+filtered <- filter(dat, (polParty == 'Don\'t know' & highEd >= 11) | (polParty == 'Ind,near dem' & highEd >= 13) | ( polParty == 'Ind,near rep' & highEd >= 13) | (polParty == 'Independent' & highEd >= 12) | (polParty == 'No answer' & highEd >= 12) | (polParty == 'Not str democrat' & highEd >= 12) | ( polParty == 'Not str republican' & highEd >= 13) | (polParty == 'Other party' & highEd >= 13) |  (polParty == 'Strong democrat' & highEd >= 12) | (polParty == 'Strong republican' & highEd>= 12))
+filtered
+summary(filtered)
+str(filtered)
 ```
 
 
