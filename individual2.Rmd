@@ -1,0 +1,71 @@
+---
+title: "individual2.Rmd"
+author: "Kellan Bouwman"
+date: "9/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+**Lab 3**
+
+
+**Lab 3**
+
+Use ggplot2 to create the plots, and dplyr to manipulate the data frame as much as possible. You may want to rename the columns of the data frame for your convenience using rename in dplyr.
+
+Find the average years of education for the respondents with each political party affiliation. Arrange your output in a meaningful order and print. Describe any patterns you find.
+Create a single data frame containing records for the better educated respondents in each political party affiliation. A “better educated” respondent is someone who has strictly more years of education than the median in the same party affiliation. Print the structure of the data frame.
+For each of the investigation below, create at least one numerical summary and one appropriate visualization. Write a paragraph to describe your findings and the variables you used.
+
+How is the happiness of a respondent related to his/her marriage status? Define that a person is happy if the response to question is “Very happy” or “Pretty happy”.
+Does party affiliation affect the relationship you found in the last question?
+How is marrital status related to the education of a respondent? What are possible reasons accounting for the patterns you see?
+Explore two more interesting questions, and answer those questions using the GSS data.
+The team’s exploration will be evaluated according to the general interest and the depth of the exploration.
+
+
+1. question 3 code test
+
+    Answer: After sorting the dataframe by hwy mpg, the lowest 5 were selected. They are  dodge dakota pickup 4wd 2008 pickup, dodge durango 4wd 2008 suv, dodge ram 1500 pickup 4wd 2008 pickup, dodge ram 1500 pickup 4wd 2008 pickup, jeep grand cherokee 4wd 2008 suv. All of them tied with 12 hwy mpg. 
+    
+```{r}
+# dplyr
+library(dplyr)
+# ggplot2
+library(ggplot2)
+
+
+
+dat <- readxl::read_xls('C:/Users/Kellan/R_work/Lab3-1/Lab3/GSS(2).xls')
+
+dat <- rename(dat, marriage = Marital_status, happiness = General_happiness, polParty = Political_party_affiliation, avgWorkWeek = Number_of_hours_usually_work_a_week, highEd = Highest_year_of_school_completed, gender = Respondents_sex)
+
+
+```
+
+2.question 5 code test
+
+    Answer: There are 33 different models for pickup trucks. While some are similar in year and name, there are unique features that make each one slightly different. Thus there are 33 unique models for this data set with the classification of pickup.
+    
+```{r}
+
+```
+  
+3. question 6 trend 1
+
+    Answer: There are quite strongly correlated. As one improves the other does as well in linear fashion. There are fewer points on the chart then on in the data file because while technically mpg could be a continuous in reality alot of vechiles share mpgs with eachother causing overlap in the data points. My findings is that the is a strong postive linear relathionship between hwy mpg and cty mpg from this data set.
+    
+```{r}
+
+```
+  
+4. Which manufacturer produces cars with higher fuel efficiency, Ford or Toyota? Use graphs and summary statistics to answer this question. Explain your findings.
+
+    Answer: Toyota makes more fuel effiecient vechiles. The median fuel effieceny is better on the Toyotas in both hwy and cty mpg. As well as when ploted the toyotas have more greater showing on the higher end of the graph.
+
+```{r}
+
+```
+
