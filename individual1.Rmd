@@ -9,3 +9,57 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Import and Setup
+
+```{r}
+library(dplyr)
+dat <- readxl::read_xls('GSS.xls')
+dat
+```
+
+## 1
+```{r}
+dat$educ <- as.numeric(as.character(dat$educ))
+dat %>%
+  group_by(pol) %>%
+  summarise_at(vars(educ), funs(mean(., na.rm=TRUE))) -> grouped
+
+ndx = order(grouped$educ, decreasing = TRUE)
+
+grouped[ndx,]
+
+```
+Generally republicans have the higher average years of education than democrats, whether that be an identified republican or near. Additionally, Those who are unsure or dont answer have the least education, this may just be because of age.
+
+## 2
+```{r}
+dat %>%
+  group_by(pol) %>%
+  summarise_at(vars(educ), funs(median(., na.rm=TRUE))) -> grouped2
+grouped2
+one <- filter(dat, pol == 'Don\'t know' & educ >= 11)
+two <- filter(dat, pol == 'Ind,near dem' & educ >= 13)
+three <- filter(dat, pol == 'Ind,near rep' & educ >= 13)
+four <- filter(dat, pol == 'Independent' & educ >= 12)
+five <- filter(dat, pol == 'No answer' & educ >= 12)
+six <- filter(dat, pol == 'Not str democrat' & educ >= 12)
+seven <- filter(dat, pol == 'Not str republican' & educ >= 13)
+eight <- filter(dat, pol == 'Other party' & educ >= 13)
+nine <- filter(dat, pol == 'Strong democrat' & educ >= 12)
+ten <- filter(dat, pol == 'Strong republican' & educ>= 12)
+
+t <- rbind(one, two)
+t <- rbind(t, three)
+t <- rbind(t, four)
+t <- rbind(t, five)
+t <- rbind(t, six)
+t <- rbind(t, seven)
+t <- rbind(t, eight)
+t <- rbind(t, nine)
+t <- rbind(t, ten)
+
+summary(t)
+str(t)
+
+```
+

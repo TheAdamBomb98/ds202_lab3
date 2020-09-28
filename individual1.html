@@ -369,7 +369,139 @@ summary {
 </div>
 
 
+<div id="import-and-setup" class="section level2">
+<h2>Import and Setup</h2>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>dat &lt;- readxl::read_xls(&#39;GSS.xls&#39;)</code></pre>
+<pre><code>## Warning in read_fun(path = enc2native(normalizePath(path)), sheet_i = sheet, :
+## Expecting numeric in A64817 / R64817C1: got &#39;Source&#39;</code></pre>
+<pre class="r"><code>dat</code></pre>
+<pre><code>## # A tibble: 64,816 x 10
+##     year happy     pol        sex   educ  childs bros  married      id ballot   
+##    &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;    
+##  1  1972 Not too ~ Ind,near ~ Fema~ 16    0      3     Never ma~     1 Not appl~
+##  2  1972 Not too ~ Not str d~ Male  10    5      4     Married       2 Not appl~
+##  3  1972 Pretty h~ Independe~ Fema~ 12    4      5     Married       3 Not appl~
+##  4  1972 Not too ~ Not str d~ Fema~ 17    0      5     Married       4 Not appl~
+##  5  1972 Pretty h~ Strong de~ Fema~ 12    2      2     Married       5 Not appl~
+##  6  1972 Pretty h~ Ind,near ~ Male  14    0      1     Never ma~     6 Not appl~
+##  7  1972 Not too ~ Ind,near ~ Male  13    2      7     Divorced      7 Not appl~
+##  8  1972 Not too ~ Ind,near ~ Male  16    0      1     Never ma~     8 Not appl~
+##  9  1972 Pretty h~ Strong de~ Fema~ 12    2      2     Never ma~     9 Not appl~
+## 10  1972 Pretty h~ Strong de~ Fema~ 12    4      7     Married      10 Not appl~
+## # ... with 64,806 more rows</code></pre>
+</div>
+<div id="section" class="section level2">
+<h2>1</h2>
+<pre class="r"><code>dat$educ &lt;- as.numeric(as.character(dat$educ))</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>dat %&gt;%
+  group_by(pol) %&gt;%
+  summarise_at(vars(educ), funs(mean(., na.rm=TRUE))) -&gt; grouped</code></pre>
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre class="r"><code>ndx = order(grouped$educ, decreasing = TRUE)
 
+grouped[ndx,]</code></pre>
+<pre><code>## # A tibble: 11 x 2
+##    pol                 educ
+##    &lt;chr&gt;              &lt;dbl&gt;
+##  1 Strong republican   13.4
+##  2 Other party         13.4
+##  3 Ind,near rep        13.3
+##  4 Not str republican  13.3
+##  5 Ind,near dem        13.2
+##  6 Not str democrat    12.6
+##  7 Strong democrat     12.5
+##  8 Independent         12.3
+##  9 No answer           12.3
+## 10 Don&#39;t know          10.9
+## 11 &lt;NA&gt;               NaN</code></pre>
+<p>Generally republicans have the higher average years of education than democrats, whether that be an identified republican or near. Additionally, Those who are unsure or dont answer have the least education, this may just be because of age.</p>
+</div>
+<div id="section-1" class="section level2">
+<h2>2</h2>
+<pre class="r"><code>dat %&gt;%
+  group_by(pol) %&gt;%
+  summarise_at(vars(educ), funs(median(., na.rm=TRUE))) -&gt; grouped2
+grouped2</code></pre>
+<pre><code>## # A tibble: 11 x 2
+##    pol                 educ
+##    &lt;chr&gt;              &lt;dbl&gt;
+##  1 Don&#39;t know            11
+##  2 Ind,near dem          13
+##  3 Ind,near rep          13
+##  4 Independent           12
+##  5 No answer             12
+##  6 Not str democrat      12
+##  7 Not str republican    13
+##  8 Other party           13
+##  9 Strong democrat       12
+## 10 Strong republican     13
+## 11 &lt;NA&gt;                  NA</code></pre>
+<pre class="r"><code>one &lt;- filter(dat, pol == &#39;Don\&#39;t know&#39; &amp; educ &gt;= 11)
+two &lt;- filter(dat, pol == &#39;Ind,near dem&#39; &amp; educ &gt;= 13)
+three &lt;- filter(dat, pol == &#39;Ind,near rep&#39; &amp; educ &gt;= 13)
+four &lt;- filter(dat, pol == &#39;Independent&#39; &amp; educ &gt;= 12)
+five &lt;- filter(dat, pol == &#39;No answer&#39; &amp; educ &gt;= 12)
+six &lt;- filter(dat, pol == &#39;Not str democrat&#39; &amp; educ &gt;= 12)
+seven &lt;- filter(dat, pol == &#39;Not str republican&#39; &amp; educ &gt;= 13)
+eight &lt;- filter(dat, pol == &#39;Other party&#39; &amp; educ &gt;= 13)
+nine &lt;- filter(dat, pol == &#39;Strong democrat&#39; &amp; educ &gt;= 12)
+ten &lt;- filter(dat, pol == &#39;Strong republican&#39; &amp; educ&gt;= 12)
+
+t &lt;- rbind(one, two)
+t &lt;- rbind(t, three)
+t &lt;- rbind(t, four)
+t &lt;- rbind(t, five)
+t &lt;- rbind(t, six)
+t &lt;- rbind(t, seven)
+t &lt;- rbind(t, eight)
+t &lt;- rbind(t, nine)
+t &lt;- rbind(t, ten)
+
+summary(t)</code></pre>
+<pre><code>##       year         happy               pol                sex           
+##  Min.   :1972   Length:42631       Length:42631       Length:42631      
+##  1st Qu.:1986   Class :character   Class :character   Class :character  
+##  Median :1998   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :1997                                                           
+##  3rd Qu.:2006                                                           
+##  Max.   :2018                                                           
+##       educ          childs              bros             married         
+##  Min.   :11.00   Length:42631       Length:42631       Length:42631      
+##  1st Qu.:12.00   Class :character   Class :character   Class :character  
+##  Median :14.00   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :14.44                                                           
+##  3rd Qu.:16.00                                                           
+##  Max.   :20.00                                                           
+##        id          ballot         
+##  Min.   :   1   Length:42631      
+##  1st Qu.: 495   Class :character  
+##  Median :1024   Mode  :character  
+##  Mean   :1155                     
+##  3rd Qu.:1608                     
+##  Max.   :4508</code></pre>
+</div>
 
 
 
