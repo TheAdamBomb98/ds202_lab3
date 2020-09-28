@@ -369,7 +369,159 @@ summary {
 </div>
 
 
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<pre class="r"><code># dplyr
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code># ggplot2
+library(ggplot2)
 
+
+
+dat &lt;- readxl::read_xls(&#39;GSS(2).xls&#39;)</code></pre>
+<pre><code>## Warning in read_fun(path = enc2native(normalizePath(path)), sheet_i = sheet, :
+## Expecting numeric in A64817 / R64817C1: got &#39;Source&#39;</code></pre>
+<pre><code>## Warning in read_fun(path = enc2native(normalizePath(path)), sheet_i = sheet, : Expecting numeric in B64817 / R64817C2: got &#39;Data collection: General Social Survey
+## Case Selection: all cases&#39;</code></pre>
+<pre class="r"><code>dat &lt;- rename(dat, marriage = Marital_status, happiness = General_happiness, polParty = Political_party_affiliation, avgWorkWeek = Number_of_hours_usually_work_a_week, highEd = Highest_year_of_school_completed, gender = Respondents_sex)</code></pre>
+</div>
+<div id="section" class="section level2">
+<h2>1</h2>
+<pre class="r"><code>dat$highEd &lt;- as.numeric(as.character(dat$highEd))</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>dat %&gt;%
+  group_by(polParty) %&gt;%
+  summarise_at(vars(highEd), funs(mean(., na.rm=TRUE))) -&gt; grouped</code></pre>
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre class="r"><code>ndx = order(grouped$highEd, decreasing = TRUE)
+
+grouped[ndx,]</code></pre>
+<pre><code>## # A tibble: 11 x 2
+##    polParty           highEd
+##    &lt;chr&gt;               &lt;dbl&gt;
+##  1 Strong republican    13.4
+##  2 Other party          13.4
+##  3 Ind,near rep         13.3
+##  4 Not str republican   13.3
+##  5 Ind,near dem         13.2
+##  6 Not str democrat     12.6
+##  7 Strong democrat      12.5
+##  8 Independent          12.3
+##  9 No answer            12.3
+## 10 Don&#39;t know           10.9
+## 11 &lt;NA&gt;                NaN</code></pre>
+<p>Generally republicans have the higher average years of education than democrats, whether that be an identified republican or near. Additionally, Those who are unsure or dont answer have the least education, this may just be because of age.</p>
+</div>
+<div id="section-1" class="section level2">
+<h2>2</h2>
+<pre class="r"><code>dat %&gt;%
+  group_by(polParty) %&gt;%
+  summarise_at(vars(highEd), funs(median(., na.rm=TRUE))) -&gt; grouped2
+grouped2</code></pre>
+<pre><code>## # A tibble: 11 x 2
+##    polParty           highEd
+##    &lt;chr&gt;               &lt;dbl&gt;
+##  1 Don&#39;t know             11
+##  2 Ind,near dem           13
+##  3 Ind,near rep           13
+##  4 Independent            12
+##  5 No answer              12
+##  6 Not str democrat       12
+##  7 Not str republican     13
+##  8 Other party            13
+##  9 Strong democrat        12
+## 10 Strong republican      13
+## 11 &lt;NA&gt;                   NA</code></pre>
+<pre class="r"><code>one &lt;- filter(dat, polParty == &#39;Don\&#39;t know&#39; &amp; highEd &gt;= 11)
+two &lt;- filter(dat, polParty == &#39;Ind,near dem&#39; &amp; highEd &gt;= 13)
+three &lt;- filter(dat, polParty == &#39;Ind,near rep&#39; &amp; highEd &gt;= 13)
+four &lt;- filter(dat, polParty == &#39;Independent&#39; &amp; highEd &gt;= 12)
+five &lt;- filter(dat, polParty == &#39;No answer&#39; &amp; highEd &gt;= 12)
+six &lt;- filter(dat, polParty == &#39;Not str democrat&#39; &amp; highEd &gt;= 12)
+seven &lt;- filter(dat, polParty == &#39;Not str republican&#39; &amp; highEd &gt;= 13)
+eight &lt;- filter(dat, polParty == &#39;Other party&#39; &amp; highEd &gt;= 13)
+nine &lt;- filter(dat, polParty == &#39;Strong democrat&#39; &amp; highEd &gt;= 12)
+ten &lt;- filter(dat, polParty == &#39;Strong republican&#39; &amp; highEd&gt;= 12)
+
+t &lt;- rbind(one, two)
+t &lt;- rbind(t, three)
+t &lt;- rbind(t, four)
+t &lt;- rbind(t, five)
+t &lt;- rbind(t, six)
+t &lt;- rbind(t, seven)
+t &lt;- rbind(t, eight)
+t &lt;- rbind(t, nine)
+t &lt;- rbind(t, ten)
+
+summary(t)</code></pre>
+<pre><code>##  Gss_ year_for_this_respondent Respondent_id_number avgWorkWeek       
+##  Min.   :1972                  Min.   :   1         Length:42631      
+##  1st Qu.:1986                  1st Qu.: 495         Class :character  
+##  Median :1998                  Median :1024         Mode  :character  
+##  Mean   :1997                  Mean   :1155                           
+##  3rd Qu.:2006                  3rd Qu.:1608                           
+##  Max.   :2018                  Max.   :4508                           
+##    marriage             highEd         gender            polParty        
+##  Length:42631       Min.   :11.00   Length:42631       Length:42631      
+##  Class :character   1st Qu.:12.00   Class :character   Class :character  
+##  Mode  :character   Median :14.00   Mode  :character   Mode  :character  
+##                     Mean   :14.44                                        
+##                     3rd Qu.:16.00                                        
+##                     Max.   :20.00                                        
+##   happiness        
+##  Length:42631      
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+## </code></pre>
+<pre class="r"><code>str(t)</code></pre>
+<pre><code>## tibble [42,631 x 8] (S3: tbl_df/tbl/data.frame)
+##  $ Gss_ year_for_this_respondent: num [1:42631] 1974 1974 1974 1974 1974 ...
+##  $ Respondent_id_number         : num [1:42631] 13 33 809 995 1135 ...
+##  $ avgWorkWeek                  : chr [1:42631] &quot;Not applicable&quot; &quot;Not applicable&quot; &quot;Not applicable&quot; &quot;Not applicable&quot; ...
+##  $ marriage                     : chr [1:42631] &quot;Married&quot; &quot;Married&quot; &quot;Married&quot; &quot;Married&quot; ...
+##  $ highEd                       : num [1:42631] 11 12 12 12 11 12 17 16 14 13 ...
+##  $ gender                       : chr [1:42631] &quot;Female&quot; &quot;Female&quot; &quot;Female&quot; &quot;Male&quot; ...
+##  $ polParty                     : chr [1:42631] &quot;Don&#39;t know&quot; &quot;Don&#39;t know&quot; &quot;Don&#39;t know&quot; &quot;Don&#39;t know&quot; ...
+##  $ happiness                    : chr [1:42631] &quot;Pretty happy&quot; &quot;Very happy&quot; &quot;Very happy&quot; &quot;Pretty happy&quot; ...</code></pre>
+</div>
+<div id="part-1" class="section level2">
+<h2>6 Part 1</h2>
+<pre class="r"><code>dat %&gt;%
+  group_by(gender) %&gt;%
+  summarise_at(vars(highEd), funs(mean(., na.rm=TRUE))) -&gt; groupedGender
+groupedGender</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   gender highEd
+##   &lt;chr&gt;   &lt;dbl&gt;
+## 1 Female   12.8
+## 2 Male     13.0
+## 3 &lt;NA&gt;    NaN</code></pre>
+<pre class="r"><code>ggplot(dat, aes(x=gender, y=highEd)) + geom_boxplot()</code></pre>
+<pre><code>## Warning: Removed 179 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /> Here we can see the relationship between the respondents sex and the level of education they achieved. Numerically we can see that there is some difference, that men average 13 years and females average 12.8 years. The boxplot shows a similar story that they are very similar. They both hold the same median and Q1 boundary at 12. We do see a difference in the Q3 boundary where extends to 16 and women stop at 15. This boxplot may not be the perfect representation as the scale isn’t completely continuous.</p>
+</div>
 
 
 
