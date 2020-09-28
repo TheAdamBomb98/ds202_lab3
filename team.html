@@ -434,46 +434,23 @@ grouped[ndx,]</code></pre>
 </div>
 <div id="section-1" class="section level2">
 <h2>2</h2>
-<pre class="r"><code>dat %&gt;%
-  group_by(polParty) %&gt;%
-  summarise_at(vars(highEd), funs(median(., na.rm=TRUE))) -&gt; grouped2
-grouped2</code></pre>
-<pre><code>## # A tibble: 11 x 2
-##    polParty           highEd
-##    &lt;chr&gt;               &lt;dbl&gt;
-##  1 Don&#39;t know             11
-##  2 Ind,near dem           13
-##  3 Ind,near rep           13
-##  4 Independent            12
-##  5 No answer              12
-##  6 Not str democrat       12
-##  7 Not str republican     13
-##  8 Other party            13
-##  9 Strong democrat        12
-## 10 Strong republican      13
-## 11 &lt;NA&gt;                   NA</code></pre>
-<pre class="r"><code>one &lt;- filter(dat, polParty == &#39;Don\&#39;t know&#39; &amp; highEd &gt;= 11)
-two &lt;- filter(dat, polParty == &#39;Ind,near dem&#39; &amp; highEd &gt;= 13)
-three &lt;- filter(dat, polParty == &#39;Ind,near rep&#39; &amp; highEd &gt;= 13)
-four &lt;- filter(dat, polParty == &#39;Independent&#39; &amp; highEd &gt;= 12)
-five &lt;- filter(dat, polParty == &#39;No answer&#39; &amp; highEd &gt;= 12)
-six &lt;- filter(dat, polParty == &#39;Not str democrat&#39; &amp; highEd &gt;= 12)
-seven &lt;- filter(dat, polParty == &#39;Not str republican&#39; &amp; highEd &gt;= 13)
-eight &lt;- filter(dat, polParty == &#39;Other party&#39; &amp; highEd &gt;= 13)
-nine &lt;- filter(dat, polParty == &#39;Strong democrat&#39; &amp; highEd &gt;= 12)
-ten &lt;- filter(dat, polParty == &#39;Strong republican&#39; &amp; highEd&gt;= 12)
-
-t &lt;- rbind(one, two)
-t &lt;- rbind(t, three)
-t &lt;- rbind(t, four)
-t &lt;- rbind(t, five)
-t &lt;- rbind(t, six)
-t &lt;- rbind(t, seven)
-t &lt;- rbind(t, eight)
-t &lt;- rbind(t, nine)
-t &lt;- rbind(t, ten)
-
-summary(t)</code></pre>
+<pre class="r"><code>filtered &lt;- filter(dat, (polParty == &#39;Don\&#39;t know&#39; &amp; highEd &gt;= 11) | (polParty == &#39;Ind,near dem&#39; &amp; highEd &gt;= 13) | ( polParty == &#39;Ind,near rep&#39; &amp; highEd &gt;= 13) | (polParty == &#39;Independent&#39; &amp; highEd &gt;= 12) | (polParty == &#39;No answer&#39; &amp; highEd &gt;= 12) | (polParty == &#39;Not str democrat&#39; &amp; highEd &gt;= 12) | ( polParty == &#39;Not str republican&#39; &amp; highEd &gt;= 13) | (polParty == &#39;Other party&#39; &amp; highEd &gt;= 13) |  (polParty == &#39;Strong democrat&#39; &amp; highEd &gt;= 12) | (polParty == &#39;Strong republican&#39; &amp; highEd&gt;= 12))
+filtered</code></pre>
+<pre><code>## # A tibble: 42,631 x 8
+##    `Gss_ year_for_~ Respondent_id_n~ avgWorkWeek marriage highEd gender polParty
+##               &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   
+##  1             1972                1 Not applic~ Never m~     16 Female Ind,nea~
+##  2             1972                3 Not applic~ Married      12 Female Indepen~
+##  3             1972                4 Not applic~ Married      17 Female Not str~
+##  4             1972                5 Not applic~ Married      12 Female Strong ~
+##  5             1972                6 Not applic~ Never m~     14 Male   Ind,nea~
+##  6             1972                7 Not applic~ Divorced     13 Male   Ind,nea~
+##  7             1972                8 Not applic~ Never m~     16 Male   Ind,nea~
+##  8             1972                9 Not applic~ Never m~     12 Female Strong ~
+##  9             1972               10 Not applic~ Married      12 Female Strong ~
+## 10             1972               11 Not applic~ Married      13 Female Strong ~
+## # ... with 42,621 more rows, and 1 more variable: happiness &lt;chr&gt;</code></pre>
+<pre class="r"><code>summary(filtered)</code></pre>
 <pre><code>##  Gss_ year_for_this_respondent Respondent_id_number avgWorkWeek       
 ##  Min.   :1972                  Min.   :   1         Length:42631      
 ##  1st Qu.:1986                  1st Qu.: 495         Class :character  
@@ -495,16 +472,16 @@ summary(t)</code></pre>
 ##                    
 ##                    
 ## </code></pre>
-<pre class="r"><code>str(t)</code></pre>
+<pre class="r"><code>str(filtered)</code></pre>
 <pre><code>## tibble [42,631 x 8] (S3: tbl_df/tbl/data.frame)
-##  $ Gss_ year_for_this_respondent: num [1:42631] 1974 1974 1974 1974 1974 ...
-##  $ Respondent_id_number         : num [1:42631] 13 33 809 995 1135 ...
+##  $ Gss_ year_for_this_respondent: num [1:42631] 1972 1972 1972 1972 1972 ...
+##  $ Respondent_id_number         : num [1:42631] 1 3 4 5 6 7 8 9 10 11 ...
 ##  $ avgWorkWeek                  : chr [1:42631] &quot;Not applicable&quot; &quot;Not applicable&quot; &quot;Not applicable&quot; &quot;Not applicable&quot; ...
-##  $ marriage                     : chr [1:42631] &quot;Married&quot; &quot;Married&quot; &quot;Married&quot; &quot;Married&quot; ...
-##  $ highEd                       : num [1:42631] 11 12 12 12 11 12 17 16 14 13 ...
-##  $ gender                       : chr [1:42631] &quot;Female&quot; &quot;Female&quot; &quot;Female&quot; &quot;Male&quot; ...
-##  $ polParty                     : chr [1:42631] &quot;Don&#39;t know&quot; &quot;Don&#39;t know&quot; &quot;Don&#39;t know&quot; &quot;Don&#39;t know&quot; ...
-##  $ happiness                    : chr [1:42631] &quot;Pretty happy&quot; &quot;Very happy&quot; &quot;Very happy&quot; &quot;Pretty happy&quot; ...</code></pre>
+##  $ marriage                     : chr [1:42631] &quot;Never married&quot; &quot;Married&quot; &quot;Married&quot; &quot;Married&quot; ...
+##  $ highEd                       : num [1:42631] 16 12 17 12 14 13 16 12 12 13 ...
+##  $ gender                       : chr [1:42631] &quot;Female&quot; &quot;Female&quot; &quot;Female&quot; &quot;Female&quot; ...
+##  $ polParty                     : chr [1:42631] &quot;Ind,near dem&quot; &quot;Independent&quot; &quot;Not str democrat&quot; &quot;Strong democrat&quot; ...
+##  $ happiness                    : chr [1:42631] &quot;Not too happy&quot; &quot;Pretty happy&quot; &quot;Not too happy&quot; &quot;Pretty happy&quot; ...</code></pre>
 </div>
 <div id="section-2" class="section level2">
 <h2>3</h2>
@@ -539,6 +516,23 @@ groupedGender</code></pre>
 </div>
 <div id="part-2" class="section level2">
 <h2>6 Part 2</h2>
+<pre class="r"><code>dat$avgWorkWeek &lt;- as.numeric(as.character(dat$avgWorkWeek))</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>dat %&gt;%
+  group_by(happiness) %&gt;%
+  summarise_at(vars(avgWorkWeek), funs(mean(., na.rm=TRUE))) -&gt; workWeekByHappy
+
+workWeekByHappy</code></pre>
+<pre><code>## # A tibble: 7 x 2
+##   happiness      avgWorkWeek
+##   &lt;chr&gt;                &lt;dbl&gt;
+## 1 Don&#39;t know            25  
+## 2 No answer             33  
+## 3 Not applicable        38.3
+## 4 Not too happy         38.8
+## 5 Pretty happy          38.8
+## 6 Very happy            40.2
+## 7 &lt;NA&gt;                 NaN</code></pre>
 </div>
 
 

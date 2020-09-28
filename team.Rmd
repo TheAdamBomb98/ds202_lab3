@@ -88,8 +88,12 @@ Here we can see the relationship between the respondents sex and the level of ed
 
 ## 6 Part 2
 ```{r}
+dat$avgWorkWeek <- as.numeric(as.character(dat$avgWorkWeek))
+dat %>%
+  group_by(happiness) %>%
+  summarise_at(vars(avgWorkWeek), funs(mean(., na.rm=TRUE))) -> workWeekByHappy
 
-
+workWeekByHappy
 
 ```
 
