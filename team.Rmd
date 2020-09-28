@@ -1,6 +1,6 @@
 ---
 title: "team"
-author: "Adam Ford and Ashley Sackpraseuth"
+author: "Adam Ford and Kellan Bouwman"
 date: "9/24/2020"
 output: html_document
 ---
@@ -36,7 +36,8 @@ ndx = order(grouped$highEd, decreasing = TRUE)
 grouped[ndx,]
 
 ```
-Generally republicans have the higher average years of education than democrats, whether that be an identified republican or near. Additionally, Those who are unsure or dont answer have the least education, this may just be because of age.
+     
+    Answer: Generally republicans have the higher average years of education than democrats, whether that be an identified republican or near. Additionally, Those who are unsure or dont answer have the least education, this may just be because of age.
 
 ## 2
 ```{r}
@@ -70,6 +71,33 @@ str(t)
 
 ```
 
+
+## 3
+```{r}
+typeof(dat$marriage)
+
+
+ggplot(data = dat, aes(x = marriage)) + geom_bar() + facet_wrap(~happiness)
+```
+
+
+## 4
+```{r}
+
+ggplot(data = dat, aes(x = happiness)) + geom_bar() + facet_grid(marriage ~ polParty)
+```
+
+## 5
+```{r}
+
+
+```
+
+
+
+
+
+
 ## 6 Part 1
 ```{r}
 dat %>%
@@ -80,3 +108,12 @@ groupedGender
 ggplot(dat, aes(x=gender, y=highEd)) + geom_boxplot()
 ```
 Here we can see the relationship between the respondents sex and the level of education they achieved. Numerically we can see that there is some difference, that men average 13 years and females average 12.8 years. The boxplot shows a similar story that they are very similar. They both hold the same median and Q1 boundary at 12. We do see a difference in the Q3 boundary where extends to 16 and women stop at 15. This boxplot may not be the perfect representation as the scale isn't completely continuous. 
+
+
+## 6 Part 2
+```{r}
+
+
+
+```
+
