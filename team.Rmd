@@ -47,32 +47,42 @@ summary(filtered)
 str(filtered)
 ```
 
-
 ## 3
 ```{r}
-typeof(dat$marriage)
 
+marriageData <- dat %>%
+  select(happiness, marriage, polParty) %>%  mutate(recode(happiness, "Very happy" = "Happy", "Pretty happy" = "Happy"))
+marriageData$happiness = recode(marriageData$happiness, "Very happy" = "Happy", "Pretty happy" = "Happy", "Not too happy" = "Not Happy", "Don't know" = "NA", "Not applicable" = "NA", "No answer" = "NA")
 
-ggplot(data = dat, aes(x = marriage)) + geom_bar() + facet_wrap(~happiness)
+marriageData %>%
+  group_by(marriage, happiness) %>%
+  summarize(count = n())
+
+ggplot(data = marriageData, aes(x = marriage, fill = marriage)) + geom_bar(width=0.7, stat='count') + facet_wrap(~happiness, drop = TRUE, scales = "free_y") + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
 ```
 
+    Answer: Yes because in the happy catergory people who are married tend to be happier signifigacntly at a higher rate. If you look at the amount of people in happy and compare the those who are married to not married, people who are married are double that of never married which is double that of divorded people who are happy. Intrestling divored and widowed happiness are about similar. In not happ the overall population is signifiagntly smaller, but the not happy count between married and never married is about the same, where as the divorced and widowed which are simlar are apporximatly 30% less, with the lowest count being seperated people.  
 
 ## 4
 ```{r}
+marriageData %>%
+  group_by(marriage, happiness, polParty) %>%
+  summarize(count = n())
 
-ggplot(data = dat, aes(x = happiness)) + geom_bar() + facet_grid(marriage ~ polParty)
+ggplot(data = marriageData, aes(x = polParty, fill = polParty)) + geom_bar() + facet_grid(happiness ~ marriage, drop = TRUE, scales = "free_y") + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
 ```
 
+    Answer: There is not much difference in the data, instead there is large amount of similarities looking at a particular intercetion the largest populations are not strong democrat or republic which show that is has little or no affect on happiness. 
+    
 ## 5
 ```{r}
 
 
+
+ggplot(data = dat, aes(x = marriage, fill = marriage)) + geom_bar(width=0.7) + facet_wrap(~gender, drop = TRUE) + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
 ```
 
-
-
-
-
+    Answer: . 
 
 ## 6 Part 1
 ```{r}
@@ -83,7 +93,8 @@ groupedGender
 
 ggplot(dat, aes(x=gender, y=highEd)) + geom_boxplot()
 ```
-Here we can see the relationship between the respondents sex and the level of education they achieved. Numerically we can see that there is some difference, that men average 13 years and females average 12.8 years. The boxplot shows a similar story that they are very similar. They both hold the same median and Q1 boundary at 12. We do see a difference in the Q3 boundary where extends to 16 and women stop at 15. This boxplot may not be the perfect representation as the scale isn't completely continuous. 
+
+    Answer: Here we can see the relationship between the respondents sex and the level of education they achieved. Numerically we can see that there is some difference, that men average 13 years and females average 12.8 years. The boxplot shows a similar story that they are very similar. They both hold the same median and Q1 boundary at 12. We do see a difference in the Q3 boundary where extends to 16 and women stop at 15. This boxplot may not be the perfect representation as the scale isn't completely continuous. 
 
 
 ## 6 Part 2
@@ -95,5 +106,7 @@ dat %>%
 
 workWeekByHappy
 
+ggplot(dat, aes(x=happiness, y=avgWorkWeek)) + geom_boxplot()
 ```
 
+    Answer: . 
