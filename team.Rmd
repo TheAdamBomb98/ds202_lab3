@@ -47,6 +47,8 @@ summary(filtered)
 str(filtered)
 ```
 
+    Answer: After filtering the data set contains the same columns, but with about 2/3 of the rows. This is due to allowing those with an education equal to the median to be included. The easiest way to be sure the dataset is filtered is to look at the summary of education, where it shows the minimum is 11, which is the lowest median of any political party. 
+
 ## 3
 ```{r}
 
